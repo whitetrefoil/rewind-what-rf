@@ -2,11 +2,11 @@ var React = require('react');
 var Router = require('react-router');
 var Route = Router.Route;
 var App = require('./components/app.jsx');
-var LoginPage = require('./components/login/page.jsx');
+var SignInPage = require('./components/sign_in/page.jsx');
 
 var routes = (
   <Route name="app" path="/" handler={App}>
-    <Route name="login" path="login" handler={LoginPage}/>
+    <Route name="signIn" path="signIn" handler={SignInPage}/>
   </Route>
 );
 
