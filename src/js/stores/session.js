@@ -1,60 +1,61 @@
 var _ = require('lodash');
 var Reflux = require('reflux');
 var LoginActions = require('../actions/account.js');
-var Net = require('../utils/net.js');
 var encrypt = require('../utils/encrypt.js');
 
 var SessionStore = Reflux.createStore({
   listenables: LoginActions,
 
   init: function() {
-    this.token = null;
+    this.data = {
+      token   : null,
+      tokenObj: null
+    };
   },
 
   getToken: function() {
-    return this.token;
+    return this.data.token;
   },
 
-  onSignIn: function(data) {
-    var session = this;
-    return Net.post('/services/users', { name: data.username }).then(function(res) {
-      var id = res['_id'];
-      session.token = res.token;
-      return Net.put('/services/accounts/' + id, { user: id, password: data.password });
-    }, function(jqXHR) {
-      try {
-        var res = jqXHR.responseJSON;
-        console.error('Error:', res._error.code);
-        console.error(res._error.message);
-        _.forEach(res._issues, function(issue) {
-          console.error(issue);
-        })
-      } catch(e) {}
-    });
+  getTokenObj: function() {
+    return this.data.tokenObj;
   },
 
-  onSignInCompleted:  function() {
-    console.log(arguments);
+  onRequestKeyCompleted: function(key) {
+    console.log('Got key successfully.');
+    this.key = key;
   },
 
-  onSignInFailed:  function() {
-    console.log(arguments);
+  onRequestKeyFailed: function(jqXHR) {
+    console.error('Failed to get key!');
+    if (jqXHR.responseJSON != null) {
+      console.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
+    }
   },
 
-  onLogIn: function(data) {
-    var str = data.username.trim() + '|' + data.password;
-    return Net.get('/services/login').then(function(res) {
-      var encrypted = encrypt(str, res.n.replace(/^0x/, ''), res.e.replace(/^0x/, ''));
-      return Net.post('/services/login', encrypted);
-    });
+  onSignInCompleted: function() {
+    console.log('Signed-in successfully.');
   },
 
-  onLogInCompleted: function() {
-    console.log(arguments);
+  onSignInFailed: function(jqXHR) {
+    console.error('Failed to sign-in!');
+    if (jqXHR.responseJSON != null) {
+      console.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
+    }
   },
 
-  onLogInFailed: function() {
-    console.log(arguments);
+  onLogInCompleted: function(tokenObj) {
+    console.log('Logged-in successfully.');
+    this.data.token = tokenObj.token;
+    this.data.tokenObj = tokenObj;
+    this.trigger(this.data);
+  },
+
+  onLogInFailed: function(jqXHR) {
+    console.error('Failed to log-in!');
+    if (jqXHR.responseJSON != null) {
+      console.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
+    }
   }
 });
 

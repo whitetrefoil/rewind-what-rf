@@ -3,6 +3,8 @@ var _ = require('lodash');
 
 var Net = {};
 
+var API_PREFIX = '/services';
+
 var DEFAULT_AJAX_OPTIONS = {
   dataType   : 'json',
   contentType: 'application/json; charset=UTF-8',
@@ -14,7 +16,7 @@ Net.get = function get(url, options) {
   options = _.extend({}, DEFAULT_AJAX_OPTIONS, options);
   options.headers.Authorization = 'Basic ' + btoa((SessionStore.getToken() || '') + ':');
   options.method = 'GET';
-  return $.ajax(url, options);
+  return $.ajax(API_PREFIX + url, options);
 };
 
 Net.post = function post(url, data, options) {
@@ -23,7 +25,7 @@ Net.post = function post(url, data, options) {
   options.data = JSON.stringify(data);
   options.headers.Authorization = 'Basic ' + btoa((SessionStore.getToken() || '') + ':');
   options.method = 'POST';
-  return $.ajax(url, options);
+  return $.ajax(API_PREFIX + url, options);
 };
 
 Net.put = function put(url, data, options) {
@@ -32,7 +34,7 @@ Net.put = function put(url, data, options) {
   options.data = JSON.stringify(data);
   options.headers.Authorization = 'Basic ' + btoa((SessionStore.getToken() || '') + ':');
   options.method = 'PUT';
-  return $.ajax(url, options);
+  return $.ajax(API_PREFIX + url, options);
 };
 
 module.exports = Net;

@@ -1,11 +1,9 @@
-var RSAKey = require('./rsa.js');
+var RSAKey = require('node-rsa');
 
-var encrypt = function(data, n, e) {
-  e || (e = '10001');
-
+var encrypt = function(data, key) {
   var rsa = new RSAKey();
-  rsa.setPublic(n, e);
-  return rsa.encrypt(data);
+  rsa.importKey(key, 'public');
+  return rsa.encrypt(typeof data === 'string' ? data : JSON.stringify(data), 'base64');
 };
 
 module.exports = encrypt;

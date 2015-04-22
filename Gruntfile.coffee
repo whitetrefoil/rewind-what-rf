@@ -11,6 +11,7 @@ gruntConfig = (grunt) ->
       server:
         files:
           '.server/js/app.js': ['src/js/**/*.{js,jsx}']
+          '.server/js/playground/app.js': ['src/js/playground/*.{js,jsx}']
       building:
         files:
           '.building/js/app.js': ['src/js/**/*.{js,jsx}']
@@ -56,7 +57,9 @@ gruntConfig = (grunt) ->
         proxies: [
           context: '/services'
           host: 'localhost'
-          port: 9000
+          port: 8080
+          rewrite:
+            '^/services': ''
         ]
         options:
           livereload: true

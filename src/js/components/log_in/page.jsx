@@ -1,18 +1,26 @@
+var _ = require('lodash');
 var React = require('react');
 var Reflux = require('reflux');
-var SessionStore = require('../../stores/session.js');
-var LoginActions = require('../../actions/account.js');
+var SessionStore = require('../../stores/session');
+var AccountActions = require('../../actions/account');
 
 var LogInPage = React.createClass({
-  mixins: [Reflux.ListenerMixin],
+  mixins: [Reflux.listenTo(SessionStore, 'onSessionChange')],
+
+  onSessionChange: function(data) {
+    if (!_.isEmpty(data.token)) {
+      this.context.router.transitionTo('/users');
+    }
+  },
+
+  contextTypes: {
+    router: React.PropTypes.func
+  },
 
   handleSubmit: function(e) {
     var username = e.currentTarget.querySelector('input[name=username]').value;
     var password = e.currentTarget.querySelector('input[name=password]').value;
-    LoginActions.logIn({
-      username: username,
-      password: password
-    })
+    AccountActions.logIn(username, password);
   },
 
   render: function() {
