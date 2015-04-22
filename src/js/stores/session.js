@@ -1,9 +1,10 @@
 var _ = require('lodash');
 var Reflux = require('reflux');
-var LoginActions = require('../actions/account.js');
-var encrypt = require('../utils/encrypt.js');
+var LoginActions = require('../actions/account');
+var encrypt = require('../utils/encrypt');
+var logger = require('../utils/logger');
 
-var SessionStore = Reflux.createStore({
+var Session = Reflux.createStore({
   listenables: LoginActions,
 
   init: function() {
@@ -22,42 +23,42 @@ var SessionStore = Reflux.createStore({
   },
 
   onRequestKeyCompleted: function(key) {
-    console.log('Got key successfully.');
+    logger.log('Got key successfully.');
     this.key = key;
   },
 
   onRequestKeyFailed: function(jqXHR) {
-    console.error('Failed to get key!');
+    logger.error('Failed to get key!');
     if (jqXHR.responseJSON != null) {
-      console.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
+      logger.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
     }
   },
 
   onSignInCompleted: function() {
-    console.log('Signed-in successfully.');
+    logger.log('Signed-in successfully.');
   },
 
   onSignInFailed: function(jqXHR) {
-    console.error('Failed to sign-in!');
+    logger.error('Failed to sign-in!');
     if (jqXHR.responseJSON != null) {
-      console.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
+      logger.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
     }
   },
 
   onLogInCompleted: function(tokenObj) {
-    console.log('Logged-in successfully.');
+    logger.log('Logged-in successfully.');
     this.data.token = tokenObj.token;
     this.data.tokenObj = tokenObj;
     this.trigger(this.data);
   },
 
   onLogInFailed: function(jqXHR) {
-    console.error('Failed to log-in!');
+    logger.error('Failed to log-in!');
     if (jqXHR.responseJSON != null) {
-      console.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
+      logger.error(jqXHR.responseJSON.code, ':', jqXHR.responseJSON.message)
     }
   }
 });
 
 
-module.exports = SessionStore;
+module.exports = Session;
