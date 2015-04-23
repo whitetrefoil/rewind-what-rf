@@ -10,7 +10,7 @@ var UserList = React.createClass({
 
   render: function() {
     var items = _.map(this.props.users, function(user) {
-      return <UserListItem user={user}/>
+      return <UserListItem key={user._id} user={user}/>
     });
 
     return (

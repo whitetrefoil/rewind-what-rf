@@ -1,5 +1,6 @@
 var _ = require('lodash');
 var Reflux = require('reflux');
+var cookie = require('cookie-monster');
 var LoginActions = require('../actions/account');
 var encrypt = require('../utils/encrypt');
 var logger = require('../utils/logger');
@@ -8,18 +9,14 @@ var Session = Reflux.createStore({
   listenables: LoginActions,
 
   init: function() {
+    var tokenInCookie = cookie.get('token');
     this.data = {
-      token   : null,
-      tokenObj: null
+      token: tokenInCookie == null ? null : atob(tokenInCookie)
     };
   },
 
   getToken: function() {
     return this.data.token;
-  },
-
-  getTokenObj: function() {
-    return this.data.tokenObj;
   },
 
   onRequestKeyCompleted: function(key) {
@@ -48,7 +45,7 @@ var Session = Reflux.createStore({
   onLogInCompleted: function(tokenObj) {
     logger.log('Logged-in successfully.');
     this.data.token = tokenObj.token;
-    this.data.tokenObj = tokenObj;
+    cookie.set('token', btoa(tokenObj.token));
     this.trigger(this.data);
   },
 

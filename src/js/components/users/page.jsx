@@ -2,7 +2,7 @@ var _ = require('lodash');
 var React = require('react');
 var Reflux = require('reflux');
 var Users = require('../../stores/users');
-var UserActions = require('../../actions/user')
+var UserActions = require('../../actions/user');
 var UserList = require('./user_list.jsx');
 
 var UsersPage = React.createClass({
@@ -16,12 +16,10 @@ var UsersPage = React.createClass({
     router: React.PropTypes.func
   },
 
-  propTypes: {
-    users: React.PropTypes.arrayOf(React.PropTypes.object)
-  },
-
-  getDefaultProps: function() {
-    this.users = Users.getUsers();
+  getInitialState: function() {
+    return {
+      users: []
+    }
   },
 
   componentDidMount: function() {
@@ -29,16 +27,16 @@ var UsersPage = React.createClass({
   },
 
   onUsersChange: function(data) {
-    this.replaceProps('users', data.users);
+    this.setState({ users: data.users.items });
   },
 
   render: function() {
     return (
-      <section class="page">
+      <section className="page">
         <header>
           <h1>用户</h1>
-          <UserList users={this.props.users}/>
         </header>
+        <UserList users={this.state.users}/>
       </section>
     )
   }

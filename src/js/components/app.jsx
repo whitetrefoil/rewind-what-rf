@@ -7,10 +7,10 @@ var App = React.createClass({
       <div id="app">
         <header>
           <h1>Rewind WHAT???</h1>
-          <div id="app-content">
-            <RouteHandler/>
-          </div>
         </header>
+        <div id="app-content">
+          <RouteHandler/>
+        </div>
       </div>
     )
   }
