@@ -27,7 +27,7 @@
     "lodash"                  : "^3.6.0",
     "moment"                  : "^2.10.2",
     "node-rsa"                : "^0.2.23",
-    "react"                   : "^0.13.1",
+    "react"                   : "^0.14.9",
     "react-router"            : "^0.13.2",
     "reactify"                : "^1.1.0",
     "reflux"                  : "^0.2.7",
